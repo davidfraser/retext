@@ -27,10 +27,10 @@ import markdown
 md = markdown.Markdown()
 
 app_name = "ReText Webpages generator"
-app_version = "0.3.2"
+app_version = "0.3.3"
 app_site = "http://sourceforge.net/p/retext/"
 
-if sys.platform == "linux2" and os.path.exists("/usr/share/wpgen/"):
+if os.path.exists("/usr/share/wpgen/"):
 	templates_dir = "/usr/share/wpgen/"
 else:
 	templates_dir = "templates/"
