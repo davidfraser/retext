@@ -59,7 +59,7 @@ else:
 dict = None
 
 app_name = "ReText"
-app_version = "1.1.4"
+app_version = "1.1.5"
 
 icon_path = "icons/"
 
@@ -160,7 +160,7 @@ class HtmlDialog(QDialog):
 		self.textEdit = QTextEdit(self)
 		self.textEdit.setReadOnly(True)
 		self.textEdit.setFont(monofont)
-		HtmlHighlighter(self.textEdit.document())
+		ReTextHighlighter(self.textEdit.document())
 		self.verticalLayout.addWidget(self.textEdit)
 		self.buttonBox = QDialogButtonBox(self)
 		self.buttonBox.setStandardButtons(QDialogButtonBox.Close)
@@ -669,7 +669,7 @@ class ReTextWindow(QMainWindow):
 				defaultExt = self.tr("ReText files")+" (*.re *.md *.markdown *.mdown *.mkd *.mkdn *.txt)"
 				ext = ".re"
 				if QSettings().contains('defaultExt'):
-					ext = QSettings.value('defaultExt').toString()
+					ext = QSettings().value('defaultExt').toString()
 			self.fileNames[self.ind] = QFileDialog.getSaveFileName(self, self.tr("Save file"), "", defaultExt)
 			if self.fileNames[self.ind] and QFileInfo(self.fileNames[self.ind]).suffix().isEmpty():
 				self.fileNames[self.ind].append(ext)
@@ -747,6 +747,7 @@ class ReTextWindow(QMainWindow):
 	
 	def printFile(self):
 		printer = QPrinter(QPrinter.HighResolution)
+		printer.setDocName(self.getDocumentTitle())
 		printer.setCreator(app_name+" "+app_version)
 		dlg = QPrintDialog(printer, self)
 		dlg.setWindowTitle(self.tr("Print document"))
@@ -758,6 +759,7 @@ class ReTextWindow(QMainWindow):
 	
 	def printPreview(self):
 		printer = QPrinter(QPrinter.HighResolution)
+		printer.setDocName(self.getDocumentTitle())
 		printer.setCreator(app_name+" "+app_version)
 		preview = QPrintPreviewDialog(printer, self)
 		self.connect(preview, SIGNAL("paintRequested(QPrinter*)"), self.printFileMain)
@@ -903,8 +905,8 @@ class ReTextWindow(QMainWindow):
 	def enablePlainTextMain(self, value):
 		self.actionPerfectHtml.setDisabled(value)
 		self.actionViewHtml.setDisabled(value)
-		self.tagsBox.setVisible(value)
-		self.symbolBox.setVisible(value)
+		self.tagsBox.setDisabled(value)
+		self.symbolBox.setDisabled(value)
 	
 	def parseText(self):
 		htmltext = self.editBoxes[self.ind].toPlainText()
