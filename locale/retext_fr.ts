@@ -380,7 +380,7 @@ Voulez vous enregistrer vos changements ?</translation>
     <message>
         <location filename="retext.py" line="1134"/>
         <source>Author: Dmitry Shachnev, 2011</source>
-        <translation>Auteur :Dmity Schachnev, 2011</translation>
+        <translation>Auteur: Dmitry Shachnev, 2011</translation>
     </message>
     <message>
         <location filename="retext.py" line="1134"/>
