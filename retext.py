@@ -22,7 +22,7 @@
 
 import sys
 import re
-from subprocess import Popen
+from subprocess import Popen, PIPE
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
