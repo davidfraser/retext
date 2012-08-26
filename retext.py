@@ -834,9 +834,11 @@ class ReTextWindow(QMainWindow):
 				ext = ".mkd"
 				if settings.contains('defaultExt'):
 					ext = settings.value('defaultExt').toString()
-			self.fileNames[self.ind] = QFileDialog.getSaveFileName(self, self.tr("Save file"), "", defaultExt)
-			if self.fileNames[self.ind] and QFileInfo(self.fileNames[self.ind]).suffix().isEmpty():
-				self.fileNames[self.ind].append(ext)
+			newFileName = QFileDialog.getSaveFileName(self, self.tr("Save file"), "", defaultExt)
+			if newFileName:
+				if not QFileInfo(newFileName).suffix():
+					newFileName += ext
+				self.fileNames[self.ind] = newFileName
 		if self.fileNames[self.ind]:
 			result = self.saveFileWrapper(self.fileNames[self.ind])
 			if result:
