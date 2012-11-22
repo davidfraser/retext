@@ -43,11 +43,6 @@ def main():
 	window.show()
 	fileNames = [QFileInfo(arg).canonicalFilePath() for arg in sys.argv[1:]]
 	for fileName in fileNames:
-		try:
-			fileName = QString.fromUtf8(fileName)
-		except:
-			# Not needed for Python 3
-			pass
 		if QFile.exists(fileName):
 			window.openFileWrapper(fileName)
 	sys.exit(app.exec_())

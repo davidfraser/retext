@@ -113,7 +113,7 @@ class ReTextWindow(QMainWindow):
 		self.actionLivePreview = self.act(self.tr('Live preview'), shct=Qt.CTRL+Qt.Key_L,
 		trigbool=self.enableLivePreview)
 		self.actionFullScreen = self.act(self.tr('Fullscreen mode'), icon='view-fullscreen',
-			shct=Qt.Key_F11, trigbool=self.enableFullScreen)
+			shct=QKeySequence(Qt.Key_F11), trigbool=self.enableFullScreen)
 		self.actionPerfectHtml = self.act('HTML', icon='text-html', trig=self.saveFilePerfect)
 		self.actionPdf = self.act('PDF', icon='application-pdf', trig=self.savePdf)
 		self.actionOdf = self.act('ODT', icon='x-office-document', trig=self.saveOdf)
@@ -135,7 +135,7 @@ class ReTextWindow(QMainWindow):
 		self.actionRedo.setEnabled(False)
 		self.actionCopy.setEnabled(False)
 		self.actionCut.setEnabled(False)
-		self.connect(qApp.clipboard(), SIGNAL('dataChanged()'), self.clipboardDataChanged)
+		# self.connect(qApp.clipboard(), SIGNAL('dataChanged()'), self.clipboardDataChanged)
 		self.clipboardDataChanged()
 		if enchant_available:
 			self.actionEnableSC = self.act(self.tr('Enable'), trigbool=self.enableSC)
@@ -163,7 +163,7 @@ class ReTextWindow(QMainWindow):
 		self.actionAbout.setMenuRole(QAction.AboutRole)
 		self.actionAboutQt = self.act(self.tr('About Qt'))
 		self.actionAboutQt.setMenuRole(QAction.AboutQtRole)
-		self.connect(self.actionAboutQt, SIGNAL('triggered()'), qApp, SLOT('aboutQt()'))
+		# self.connect(self.actionAboutQt, SIGNAL('triggered()'), qApp, SLOT('aboutQt()'))
 		availableMarkups = markups.get_available_markups()
 		if not availableMarkups:
 			print('Warning: no markups are available!')
@@ -496,11 +496,7 @@ class ReTextWindow(QMainWindow):
 		if self.fileNames[ind]:
 			self.setCurrentFile()
 		else:
-			try:
-				self.setWindowTitle(self.tr('New document') + '[*] ' + QChar(0x2014) + ' ' + app_name)
-			except:
-				# For Python 3
-				self.setWindowTitle(self.tr('New document') + '[*] \u2014 ' + app_name)
+			self.setWindowTitle(self.tr('New document') + u'[*] \u2014 ' + app_name)
 			self.docTypeChanged()
 		self.modificationChanged(self.editBoxes[ind].document().isModified())
 		self.livePreviewEnabled = self.alpc[ind]
@@ -879,7 +875,7 @@ class ReTextWindow(QMainWindow):
 		for markup in markups.get_all_markups():
 			supportedExtensions += markup.file_extensions
 		fileFilter = ' (' + str.join(' ', ['*'+ext for ext in supportedExtensions]) + ');;'
-		fileNames = QFileDialog.getOpenFileNames(self, self.tr("Select one or several files to open"), "",
+		fileNames, _ = QFileDialog.getOpenFileNames(self, self.tr("Select one or several files to open"), "",
 		self.tr("Supported files") + fileFilter + self.tr("All files (*)"))
 		for fileName in fileNames:
 			self.openFileWrapper(fileName)
@@ -949,7 +945,7 @@ class ReTextWindow(QMainWindow):
 					% markupClass.name + ' (' + str.join(' ',
 					['*'+ext for ext in markupClass.file_extensions]) + ')'
 				ext = markupClass.default_extension
-			newFileName = QFileDialog.getSaveFileName(self, self.tr("Save file"), "", defaultExt)
+			newFileName, _ = QFileDialog.getSaveFileName(self, self.tr("Save file"), "", defaultExt)
 			if newFileName:
 				if not QFileInfo(newFileName).suffix():
 					newFileName += ext
@@ -1007,7 +1003,7 @@ class ReTextWindow(QMainWindow):
 			document = self.textDocument()
 		except:
 			return self.printError()
-		fileName = QFileDialog.getSaveFileName(self, self.tr("Export document to ODT"), "",
+		fileName, _ = QFileDialog.getSaveFileName(self, self.tr("Export document to ODT"), "",
 			self.tr("OpenDocument text files (*.odt)"))
 		if not QFileInfo(fileName).suffix():
 			fileName += ".odt"
@@ -1017,7 +1013,7 @@ class ReTextWindow(QMainWindow):
 	
 	def saveFilePerfect(self):
 		fileName = None
-		fileName = QFileDialog.getSaveFileName(self, self.tr("Save file"), "",
+		fileName, _ = QFileDialog.getSaveFileName(self, self.tr("Save file"), "",
 			self.tr("HTML files (*.html *.htm)"))
 		if fileName:
 			self.saveHtml(fileName)
@@ -1038,7 +1034,7 @@ class ReTextWindow(QMainWindow):
 	
 	def savePdf(self):
 		self.updatePreviewBox()
-		fileName = QFileDialog.getSaveFileName(self, self.tr("Export document to PDF"),
+		fileName, _ = QFileDialog.getSaveFileName(self, self.tr("Export document to PDF"),
 			"", self.tr("PDF files (*.pdf)"))
 		if fileName:
 			if not QFileInfo(fileName).suffix():
@@ -1075,7 +1071,7 @@ class ReTextWindow(QMainWindow):
 		if of:
 			if defaultext and not filefilter:
 				filefilter = '*'+defaultext
-			fileName = QFileDialog.getSaveFileName(self, self.tr('Export document'), '', filefilter)
+			fileName, _ = QFileDialog.getSaveFileName(self, self.tr('Export document'), '', filefilter)
 			if not fileName:
 				return
 			if defaultext and not QFileInfo(fileName).suffix():
@@ -1093,11 +1089,6 @@ class ReTextWindow(QMainWindow):
 			Popen(str(command), shell=True).wait()
 		except Exception as error:
 			errorstr = str(error)
-			try:
-				errorstr = QString.fromUtf8(errorstr)
-			except:
-				# Not needed for Python 3
-				pass
 			QMessageBox.warning(self, app_name, self.tr('Failed to execute the command:')
 			+ '\n' + errorstr)
 		QFile(tmpname).remove()
@@ -1132,7 +1123,7 @@ class ReTextWindow(QMainWindow):
 		self.setWindowModified(changed)
 	
 	def clipboardDataChanged(self):
-		self.actionPaste.setEnabled(qApp.clipboard().mimeData().hasText())
+		pass # self.actionPaste.setEnabled(qApp.clipboard().mimeData().hasText())
 	
 	def insertChars(self, chars):
 		tc = self.editBoxes[self.ind].textCursor()
@@ -1204,11 +1195,7 @@ class ReTextWindow(QMainWindow):
 		except:
 			return self.printError()
 		winTitle = self.getDocumentTitle(baseName=True)
-		try:
-			HtmlDlg.setWindowTitle(winTitle+" ("+self.tr("HTML code")+") "+QChar(0x2014)+" "+app_name)
-		except:
-			# For Python 3
-			HtmlDlg.setWindowTitle(winTitle+" ("+self.tr("HTML code")+") \u2014 "+app_name)
+		HtmlDlg.setWindowTitle(winTitle+" ("+self.tr("HTML code")+") \u2014 "+app_name)
 		HtmlDlg.textEdit.setPlainText(htmltext.rstrip())
 		HtmlDlg.show()
 		HtmlDlg.raise_()
