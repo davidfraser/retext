@@ -4,8 +4,8 @@
 
 import markups
 from subprocess import Popen, PIPE
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PySide.QtCore import *
+from PySide.QtGui import *
 
 app_name = "ReText"
 app_version = "4.0 (Git)"
@@ -33,7 +33,7 @@ DOCTYPE_REST = markups.ReStructuredTextMarkup.name
 DOCTYPE_HTML = 'html'
 
 try:
-	from PyQt4.QtWebKit import QWebView, QWebPage
+	from PySide.QtWebKit import QWebView, QWebPage
 except:
 	webkit_available = False
 else:
