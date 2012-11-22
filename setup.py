@@ -2,6 +2,9 @@
 
 VERSION = '4.0~rc1'
 
+from distribute_setup import use_setuptools
+use_setuptools()
+
 from distutils.core import setup
 from distutils.command.build import build
 from distutils.command.sdist import sdist
@@ -38,6 +41,7 @@ setup(name='ReText',
 	url='http://retext.sourceforge.net/',
 	packages=['ReText'],
 	scripts=['retext.py', 'wpgen.py'],
+	install_requires=['PySide', 'Markups', 'Markdown', 'docutils', 'pyenchant'],
 	cmdclass={'build': retext_build, 'sdist': retext_sdist},
 	license='GPL 2+'
 )
