@@ -4,8 +4,46 @@
 
 import markups
 from subprocess import Popen, PIPE
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+
+def detect_qt_package():
+	"""Determines which version of qt (PyQt4 or PySide) to use"""
+	try:
+		import PyQt4
+		return "PyQt4"
+	except ImportError, PyQt4_import_error:
+		pass
+	try:
+		import PySide
+		return "PySide"
+	except ImportError, PySide_import_error:
+		pass
+	raise ImportError("Error importing PyQt4 (%s) and PySide (%s). One of these libraries is required to run ReText" % (PyQt4_import_error, PySide_import_error))
+
+def detect_py_version():
+	"""Returns the major version of CPython"""
+	import sys
+	return sys.version_info[0]
+
+qt_package_name = detect_qt_package()
+if qt_package_name == "PyQt4":
+	from PyQt4.QtCore import *
+	from PyQt4.QtGui import *
+elif qt_package_name == "PySide":
+	from PySide.QtCore import *
+	from PySide.QtGui import *
+	if detect_py_version() == 2:
+		QChar = unichr
+
+def get_qApp():
+	"""Returns the current running application"""
+	if qt_package_name == "PySide":
+		return QApplication.instance()
+	else:
+		return qApp
+
+def QFileDialog_result(result):
+	"""Returns the filename from a QFileDialog.get..FileName function (compatibility function for PyQt4/PySide)"""
+	return result[0] if qt_package_name == "PySide" else result
 
 app_name = "ReText"
 app_version = "4.0 (Git)"
@@ -33,7 +71,10 @@ DOCTYPE_REST = markups.ReStructuredTextMarkup.name
 DOCTYPE_HTML = 'html'
 
 try:
-	from PyQt4.QtWebKit import QWebView, QWebPage
+	if qt_package_name == "PyQt4":
+		from PyQt4.QtWebKit import QWebView, QWebPage
+	elif qt_package_name == "PySide":
+		from PySide.QtWebKit import QWebView, QWebPage
 except:
 	webkit_available = False
 else:
