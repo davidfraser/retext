@@ -41,6 +41,10 @@ def get_qApp():
 	else:
 		return qApp
 
+def QFileDialog_result(result):
+	"""Returns the filename from a QFileDialog.get..FileName function (compatibility function for PyQt4/PySide)"""
+	return result[0] if qt_package_name == "PySide" else result
+
 app_name = "ReText"
 app_version = "4.0 (Git)"
 
