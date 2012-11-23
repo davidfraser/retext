@@ -496,7 +496,11 @@ class ReTextWindow(QMainWindow):
 		if self.fileNames[ind]:
 			self.setCurrentFile()
 		else:
-			self.setWindowTitle(self.tr('New document') + u'[*] \u2014 ' + app_name)
+			try:
+				self.setWindowTitle(self.tr('New document') + '[*] ' + QChar(0x2014) + ' ' + app_name)
+			except:
+				# For Python 3
+				self.setWindowTitle(self.tr('New document') + '[*] \u2014 ' + app_name)
 			self.docTypeChanged()
 		self.modificationChanged(self.editBoxes[ind].document().isModified())
 		self.livePreviewEnabled = self.alpc[ind]
@@ -1089,6 +1093,11 @@ class ReTextWindow(QMainWindow):
 			Popen(str(command), shell=True).wait()
 		except Exception as error:
 			errorstr = str(error)
+			try:
+				errorstr = QString.fromUtf8(errorstr)
+			except:
+				# Not needed for Python 3
+				pass
 			QMessageBox.warning(self, app_name, self.tr('Failed to execute the command:')
 			+ '\n' + errorstr)
 		QFile(tmpname).remove()
