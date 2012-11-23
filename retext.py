@@ -24,6 +24,7 @@ from ReText.window import ReTextWindow
 
 def main():
 	app = QApplication(sys.argv)
+	load_svg_plugin()
 	app.setOrganizationName("ReText project")
 	app.setApplicationName("ReText")
 	RtTranslator = QTranslator()

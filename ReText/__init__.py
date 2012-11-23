@@ -34,6 +34,17 @@ elif qt_package_name == "PySide":
 	if detect_py_version() == 2:
 		QChar = unichr
 
+def load_svg_plugin():
+	"""Works around SVG icons not working by default in PySide on Windows. Needs to be called after app loaded"""
+	import sys
+	if qt_package_name != "PySide" or "win" not in sys.platform:
+		return
+	import PySide
+	from PySide import QtSvg, QtXml
+	import os
+	for plugins_dir in [os.path.join(p, "plugins") for p in PySide.__path__]:
+		get_qApp().addLibraryPath(plugins_dir)
+
 def get_qApp():
 	"""Returns the current running application"""
 	if qt_package_name == "PySide":

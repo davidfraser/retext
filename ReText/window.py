@@ -51,8 +51,8 @@ class ReTextWindow(QMainWindow):
 					iconTheme = iconTheme.decode()
 					QIcon.setThemeName(iconTheme)
 					settings.setValue('iconTheme', iconTheme)
-		if QFile.exists(icon_path+'retext.png'):
-			self.setWindowIcon(QIcon(icon_path+'retext.png'))
+		if QFile.exists(icon_path+'retext.svg'):
+			self.setWindowIcon(QIcon(icon_path+'retext.svg'))
 		else:
 			self.setWindowIcon(QIcon.fromTheme('retext', QIcon.fromTheme('accessories-text-editor')))
 		self.editBoxes = []
@@ -109,7 +109,7 @@ class ReTextWindow(QMainWindow):
 		elif QIcon.hasThemeIcon('x-office-document'):
 			self.actionPreview.setIcon(QIcon.fromTheme('x-office-document'))
 		else:
-			self.actionPreview.setIcon(QIcon(icon_path+'document-preview.png'))
+			self.actionPreview.setIcon(QIcon(icon_path+'document-preview.svg'))
 		self.actionLivePreview = self.act(self.tr('Live preview'), shct=Qt.CTRL+Qt.Key_L,
 		trigbool=self.enableLivePreview)
 		self.actionFullScreen = self.act(self.tr('Fullscreen mode'), icon='view-fullscreen',
@@ -360,7 +360,7 @@ class ReTextWindow(QMainWindow):
 		return action
 	
 	def actIcon(self, name):
-		return QIcon.fromTheme(name, QIcon(icon_path+name+'.png'))
+		return QIcon.fromTheme(name, QIcon(icon_path+name+'.svg'))
 	
 	def printError(self):
 		import traceback
