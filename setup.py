@@ -41,7 +41,7 @@ setup(name='ReText',
 	url='http://retext.sourceforge.net/',
 	packages=['ReText'],
 	scripts=['retext.py', 'wpgen.py'],
-        install_requires=['PySide', 'Markups', 'Markdown', 'docutils', 'pyenchant'],
+	install_requires=['PySide', 'Markups', 'Markdown', 'docutils', 'pyenchant'],
 	cmdclass={'build': retext_build, 'sdist': retext_sdist},
 	license='GPL 2+'
 )
