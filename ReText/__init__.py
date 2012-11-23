@@ -19,6 +19,11 @@ def detect_qt_package():
 		pass
 	raise ImportError("Error importing PyQt4 (%s) and PySide (%s). One of these libraries is required to run ReText" % (PyQt4_import_error, PySide_import_error))
 
+def detect_py_version():
+	"""Returns the major version of CPython"""
+	import sys
+	return sys.version_info[0]
+
 qt_package_name = detect_qt_package()
 if qt_package_name == "PyQt4":
 	from PyQt4.QtCore import *
@@ -26,6 +31,15 @@ if qt_package_name == "PyQt4":
 elif qt_package_name == "PySide":
 	from PySide.QtCore import *
 	from PySide.QtGui import *
+	if detect_py_version() == 2:
+		QChar = unichr
+
+def get_qApp():
+	"""Returns the current running application"""
+	if qt_package_name == "PySide":
+		return QApplication.instance()
+	else:
+		return qApp
 
 app_name = "ReText"
 app_version = "4.0 (Git)"

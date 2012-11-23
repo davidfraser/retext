@@ -135,7 +135,7 @@ class ReTextWindow(QMainWindow):
 		self.actionRedo.setEnabled(False)
 		self.actionCopy.setEnabled(False)
 		self.actionCut.setEnabled(False)
-		# self.connect(qApp.clipboard(), SIGNAL('dataChanged()'), self.clipboardDataChanged)
+		self.connect(get_qApp().clipboard(), SIGNAL('dataChanged()'), self.clipboardDataChanged)
 		self.clipboardDataChanged()
 		if enchant_available:
 			self.actionEnableSC = self.act(self.tr('Enable'), trigbool=self.enableSC)
@@ -163,7 +163,7 @@ class ReTextWindow(QMainWindow):
 		self.actionAbout.setMenuRole(QAction.AboutRole)
 		self.actionAboutQt = self.act(self.tr('About Qt'))
 		self.actionAboutQt.setMenuRole(QAction.AboutQtRole)
-		# self.connect(self.actionAboutQt, SIGNAL('triggered()'), qApp, SLOT('aboutQt()'))
+		self.connect(self.actionAboutQt, SIGNAL('triggered()'), get_qApp(), SLOT('aboutQt()'))
 		availableMarkups = markups.get_available_markups()
 		if not availableMarkups:
 			print('Warning: no markups are available!')
@@ -1123,7 +1123,7 @@ class ReTextWindow(QMainWindow):
 		self.setWindowModified(changed)
 	
 	def clipboardDataChanged(self):
-		pass # self.actionPaste.setEnabled(qApp.clipboard().mimeData().hasText())
+		self.actionPaste.setEnabled(get_qApp().clipboard().mimeData().hasText())
 	
 	def insertChars(self, chars):
 		tc = self.editBoxes[self.ind].textCursor()
@@ -1195,7 +1195,11 @@ class ReTextWindow(QMainWindow):
 		except:
 			return self.printError()
 		winTitle = self.getDocumentTitle(baseName=True)
-		HtmlDlg.setWindowTitle(winTitle+" ("+self.tr("HTML code")+") \u2014 "+app_name)
+		try:
+			HtmlDlg.setWindowTitle(winTitle+" ("+self.tr("HTML code")+") "+QChar(0x2014)+" "+app_name)
+		except:
+			# For Python 3
+			HtmlDlg.setWindowTitle(winTitle+" ("+self.tr("HTML code")+") \u2014 "+app_name)
 		HtmlDlg.textEdit.setPlainText(htmltext.rstrip())
 		HtmlDlg.show()
 		HtmlDlg.raise_()
