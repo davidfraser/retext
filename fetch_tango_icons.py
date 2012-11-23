@@ -60,6 +60,8 @@ for icon in sorted(icons):
 			file_contents = archive_file.read()
 		with open(os.path.join(ICONS_DIR, icon+".svg"), "wb") as icon_file:
 			icon_file.write(file_contents)
+	elif os.path.exists(os.path.join(ICONS_DIR, icon+".svg")):
+		logging.info("Not writing over existing icon %s", icon)
 	else:
 		logging.warning("Can't find icon %s", icon)
 
