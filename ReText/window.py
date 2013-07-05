@@ -237,7 +237,7 @@ class ReTextWindow(QMainWindow):
 			menuExport.addSeparator()
 			for action, mimetype in self.extensionActions:
 				menuExport.addAction(action)
-			self.connect(self.menuExport, SIGNAL('aboutToShow()'), self.updateExtensionsVisibility)
+			self.connect(menuExport, SIGNAL('aboutToShow()'), self.updateExtensionsVisibility)
 		menuFile.addAction(self.actionPrint)
 		menuFile.addAction(self.actionPrintPreview)
 		menuFile.addSeparator()
